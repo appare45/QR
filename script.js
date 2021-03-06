@@ -3,5 +3,13 @@
 
 // prints "hi" in the browser's dev tools console
 console.log("hi");
-
-navigator.permissions.query({name: "bluetooth"}).then(result => console.log(result))
+window.onload = () => {
+  if (navigator.bluetooth == undefined) {
+    console.log("No navigator.bluetooth found.");
+  } else {
+    console.info("Bluetooth check: OK");
+  }
+  navigator.permissions
+  .query({ name: "bluetooth" })
+  .then(result => console.log(result));
+};
