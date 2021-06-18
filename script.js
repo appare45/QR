@@ -40,19 +40,12 @@ window.onload = () => {
         } else {
           console.log("Barcode Detector is not supported by this browser.");
         }
-        const updateCanvas = () => {
-          ctx.drawImage(
-            videoElement,
-            0,
-            0,
-            canvasElement.width,
-            canvasElement.height
-          );
+
+        const detectCode = canvas => {
           barcodeDetector
-            .detect(canvasElement)
+            .detect(canvas)
             .then(barcodes => {
               barcodes.forEach(barcode => {
-                
                 ctx.lineWidth = 5;
                 ctx.lineJoin = "round";
                 ctx.strokeStyle = "blue";
@@ -77,20 +70,35 @@ window.onload = () => {
                 );
                 ctx.closePath();
                 ctx.stroke();
-                ctx.fill()
+                ctx.fill();
                 alert(barcode.rawValue);
               });
               setTimeout(
-                () => updateCanvas(),
-                1000 / videoTrack.getSettings().frameRate
+                () => detectCode(),
+                (1000 / videoTrack.getSettings().frameRate) * 10
               );
             })
             .catch(err => {
+            
               console.log(err);
             });
         };
+        const updateCanvas = () => {
+          ctx.drawImage(
+            videoElement,
+            0,
+            0,
+            canvasElement.width,
+            canvasElement.height
+          );
+          setTimeout(
+            () => updateCanvas(),
+            1000 / videoTrack.getSettings().frameRate
+          );
+        };
 
-        window.requestAnimationFrame(updateCanvas);
+        updateCanvas();      
+        detectCode(videoElement);
       })
       .catch(e => {
         errorElement.innerText = e;
