@@ -32,9 +32,7 @@ window.onload = () => {
         canvasElement.width = videoTrack.getSettings().width;
         canvasElement.height = videoTrack.getSettings().height;
         // create new detector
-        var barcodeDetector = new BarcodeDetector({
-          formats: ["qr_code"]
-        });
+        var barcodeDetector = new BarcodeDetector();
 
         // check compatibility
         if (barcodeDetector) {
@@ -47,8 +45,8 @@ window.onload = () => {
         const ctx = document.getElementById('canvas_overlay').getContext("2d");
         ctx.lineWidth = 5;
                 ctx.lineJoin = "round";
-                ctx.strokeStyle = "#4287f5";
-                ctx.fillStyle = "#4287f591";
+                ctx.strokeStyle = "#ff756b";
+                ctx.fillStyle = "#ff756b91";
                 ctx.beginPath();
                 ctx.moveTo(
                   points[0].x,
@@ -81,6 +79,7 @@ window.onload = () => {
             const ctx = document.getElementById('canvas_overlay').getContext("2d");
               barcodes.forEach(barcode => {
                 drawBoxToOverLay(barcode.cornerPoints)
+                errorElement.innerText = barcode.rawValue;
               });
               setTimeout(
                 () => detectCode(canvas),
