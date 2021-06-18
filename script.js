@@ -54,7 +54,18 @@ window.onload = () => {
             .then(barcodes => {
               barcodes.forEach(barcode => {
                 console.log(barcode.rawValue);
-                alert(barcode.rawValue);
+                ctx.beginPath();
+                ctx.moveTo(
+                  barcode.cornerPoints[0].x,
+                  barcode.cornerPoints[0].y
+                );
+                
+                ctx.lineTo(
+                  barcode.cornerPoints[1].x,
+                  barcode.cornerPoints[1].y
+                );
+                
+                ctx.stroke();
               });
               setTimeout(
                 () => updateCanvas(),
