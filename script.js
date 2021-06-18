@@ -23,39 +23,43 @@ window.onload = () => {
   });
 
   async function init() {
-    if (await !userCamera) {
-      errorElement.innerText = "カメラにアクセスできませんでした";
-    } else {
-      videoElement.srcObject = await userCamera;
-      userCamera.then(e => {
+    userCamera
+      .then(e => {
+        videoElement.srcObject = e;
         const videoTrack = e.getVideoTracks()[0];
-        canvasElement.width = videoTrack.getSettings().width
-        canvasElement.width = videoTrack.getSettings().width
+        canvasElement.width = videoTrack.getSettings().width;
+        canvasElement.height = videoTrack.getSettings().height;
         const updateCanvas = () => {
           ctx.drawImage(
             videoElement,
-            0,
+            -canvasElement.width,
             0,
             canvasElement.width,
             canvasElement.height
           );
-          setTimeout(() => updateCanvas(), 1000 / videoTrack.getSettings().frameRate);
+          ctx.scale(-1, 1);
+          setTimeout(
+            () => updateCanvas(),
+            1000 / videoTrack.getSettings().frameRate
+          );
         };
-        
+
         window.requestAnimationFrame(updateCanvas);
+      })
+      .catch(e => {
+        errorElement.innerText = e;
       });
 
-      // create new detector
-      var barcodeDetector = new BarcodeDetector({
-        formats: ["qr_code"]
-      });
+    // create new detector
+    var barcodeDetector = new BarcodeDetector({
+      formats: ["qr_code"]
+    });
 
-      // check compatibility
-      if (barcodeDetector) {
-        console.log("Barcode Detector supported!");
-      } else {
-        console.log("Barcode Detector is not supported by this browser.");
-      }
+    // check compatibility
+    if (barcodeDetector) {
+      console.log("Barcode Detector supported!");
+    } else {
+      console.log("Barcode Detector is not supported by this browser.");
     }
   }
   init();
