@@ -26,7 +26,8 @@ window.onload = () => {
     userCamera
       .then(e => {
         videoElement.srcObject = e;
-        const videoTrack = e.getVideoTracks()[0];
+        const videoTracks = e.getVideoTracks()
+        const videoTrack = videoTracks[0];
         canvasElement.width = videoTrack.getSettings().width;
         canvasElement.height = videoTrack.getSettings().height;
         // create new detector
@@ -45,7 +46,7 @@ window.onload = () => {
         const ctx = document.getElementById('canvas_overlay').getContext("2d");
         ctx.lineWidth = 5;
                 ctx.lineJoin = "round";
-                ctx.strokeStyle = "blue";
+                ctx.strokeStyle = "#4287f5";
                 ctx.fillStyle = "#4287f591";
                 ctx.beginPath();
                 ctx.moveTo(
@@ -108,7 +109,11 @@ window.onload = () => {
         detectCode(canvasElement);
       })
       .catch(e => {
-        errorElement.innerText = e;
+      console.info(e)
+      if(e.toString().indexOf('NotAllowedError')) {
+        errorElement.innerText = 'アクセスが拒否されました';
+      }else {errorElement.innerText = e;}
+        
       });
   }
   init();
