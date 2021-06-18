@@ -23,23 +23,27 @@ window.onload = () => {
   });
 
   async function init() {
-    console.info(await userCamera);
     if (await !userCamera) {
       errorElement.innerText = "カメラにアクセスできませんでした";
     } else {
       videoElement.srcObject = await userCamera;
-      const updateCanvas = () => {
-        console.info(ctx)
-        ctx.drawImage(
-          videoElement,
-          0,
-          0,
-          canvasElement.width,
-          canvasElement.height
-        );
-        setTimeOut(() => updateCanvas(), 1000)
-      };
-      window.requestAnimationFrame(updateCanvas);
+      userCamera.then(e => {
+        const videoTrack = e.getVideoTracks()[0];
+        canvasElement.width = videoTrack.getSettings().width
+        canvasElement.width = videoTrack.getSettings().width
+        const updateCanvas = () => {
+          ctx.drawImage(
+            videoElement,
+            0,
+            0,
+            canvasElement.width,
+            canvasElement.height
+          );
+          setTimeout(() => updateCanvas(), 1000 / videoTrack.getSettings().frameRate);
+        };
+        
+        window.requestAnimationFrame(updateCanvas);
+      });
 
       // create new detector
       var barcodeDetector = new BarcodeDetector({
