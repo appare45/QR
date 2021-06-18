@@ -48,24 +48,37 @@ window.onload = () => {
             canvasElement.width,
             canvasElement.height
           );
-          // ctx.scale(-1, 1);
           barcodeDetector
             .detect(canvasElement)
             .then(barcodes => {
               barcodes.forEach(barcode => {
-                console.log(barcode.rawValue);
+                
+                ctx.lineWidth = 5;
+                ctx.lineJoin = "round";
+                ctx.strokeStyle = "blue";
+                ctx.fillStyle = "#4287f591";
                 ctx.beginPath();
                 ctx.moveTo(
                   barcode.cornerPoints[0].x,
                   barcode.cornerPoints[0].y
                 );
-                
+
                 ctx.lineTo(
                   barcode.cornerPoints[1].x,
                   barcode.cornerPoints[1].y
                 );
-                
+                ctx.lineTo(
+                  barcode.cornerPoints[2].x,
+                  barcode.cornerPoints[2].y
+                );
+                ctx.lineTo(
+                  barcode.cornerPoints[3].x,
+                  barcode.cornerPoints[3].y
+                );
+                ctx.closePath();
                 ctx.stroke();
+                ctx.fill()
+                alert(barcode.rawValue);
               });
               setTimeout(
                 () => updateCanvas(),
