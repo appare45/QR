@@ -4,7 +4,8 @@
 // prints "hi" in the browser's dev tools console
 window.onload = () => {
   const videoElement = document.getElementById("video");
-  const ctx = videoElement.getContext('2d');
+  const canvasElement = document.getElementById("canvas");
+  const ctx = canvasElement.getContext("2d");
   const errorElement = document.getElementById("error");
   const userCamera = new Promise((resolve, reject) => {
     navigator.mediaDevices
@@ -26,8 +27,20 @@ window.onload = () => {
     if (await !userCamera) {
       errorElement.innerText = "カメラにアクセスできませんでした";
     } else {
-      ctx.drawImage(userCamera, 0, 0, videoElement.width, videoElement.height)
       videoElement.srcObject = await userCamera;
+      const updateCanvas = () => {
+        console.info(ctx)
+        ctx.drawImage(
+          videoElement,
+          0,
+          0,
+          canvasElement.width,
+          canvasElement.height
+        );
+        setTimeOut(() => updateCanvas(), 1000)
+      };
+      window.requestAnimationFrame(updateCanvas);
+
       // create new detector
       var barcodeDetector = new BarcodeDetector({
         formats: ["qr_code"]
