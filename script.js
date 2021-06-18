@@ -2,7 +2,6 @@
     to your site with Javascript */
 
 // prints "hi" in the browser's dev tools console
-import jsQR from "jsqr";
 
 window.onload = () => {
   const videoElement = document.getElementById("video");
