@@ -11,7 +11,16 @@ h1 {
 }
 
 .video {
-  width: 100%;
   margin: 0;
-  height: 100%
+}
+
+main {
+  position: relative;
+  height: max-content;
+}
+
+main > * {
+  position: absolute;
+  top: 0;
+  left: 0
 }

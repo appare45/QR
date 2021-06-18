@@ -5,7 +5,7 @@
 window.onload = () => {
   const videoElement = document.getElementById("video");
   const canvasElement = document.getElementById("canvas");
-  const ctx = canvasElement.getContext("2d");
+  
   const errorElement = document.getElementById("error");
   const userCamera = new Promise((resolve, reject) => {
     navigator.mediaDevices
@@ -40,50 +40,57 @@ window.onload = () => {
         } else {
           console.log("Barcode Detector is not supported by this browser.");
         }
-
-        const detectCode = canvas => {
-          barcodeDetector
-            .detect(canvas)
-            .then(barcodes => {
-              barcodes.forEach(barcode => {
-                ctx.lineWidth = 5;
+      
+      const drawBoxToOverLay = points => {
+        const ctx = document.getElementById('canvas_overlay').getContext("2d");
+        ctx.lineWidth = 5;
                 ctx.lineJoin = "round";
                 ctx.strokeStyle = "blue";
                 ctx.fillStyle = "#4287f591";
                 ctx.beginPath();
                 ctx.moveTo(
-                  barcode.cornerPoints[0].x,
-                  barcode.cornerPoints[0].y
+                  points[0].x,
+                  points[0].y
                 );
 
                 ctx.lineTo(
-                  barcode.cornerPoints[1].x,
-                  barcode.cornerPoints[1].y
+                  points[1].x,
+                  points[1].y
                 );
                 ctx.lineTo(
-                  barcode.cornerPoints[2].x,
-                  barcode.cornerPoints[2].y
+                  points[2].x,
+                  points[2].y
                 );
                 ctx.lineTo(
-                  barcode.cornerPoints[3].x,
-                  barcode.cornerPoints[3].y
+                  points[3].x,
+                  points[3].y
                 );
                 ctx.closePath();
                 ctx.stroke();
                 ctx.fill();
-                alert(barcode.rawValue);
+      }
+
+        const detectCode = canvas => {
+          barcodeDetector
+            .detect(canvas)
+            .then(barcodes => {
+            document.getElementById('canvas_overlay').width = canvas.width
+            document.getElementById('canvas_overlay').height = canvas.height
+            const ctx = document.getElementById('canvas_overlay').getContext("2d");
+              barcodes.forEach(barcode => {
+                drawBoxToOverLay(barcode.cornerPoints)
               });
               setTimeout(
-                () => detectCode(),
-                (1000 / videoTrack.getSettings().frameRate) * 10
+                () => detectCode(canvas),
+                (1000 / videoTrack.getSettings().frameRate) * 0.9
               );
             })
-            .catch(err => {
-            
+            .catch(err => {            
               console.log(err);
             });
         };
         const updateCanvas = () => {
+          const ctx = canvasElement.getContext("2d");
           ctx.drawImage(
             videoElement,
             0,
@@ -98,7 +105,7 @@ window.onload = () => {
         };
 
         updateCanvas();      
-        detectCode(videoElement);
+        detectCode(canvasElement);
       })
       .catch(e => {
         errorElement.innerText = e;
