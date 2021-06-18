@@ -29,19 +29,41 @@ window.onload = () => {
         const videoTrack = e.getVideoTracks()[0];
         canvasElement.width = videoTrack.getSettings().width;
         canvasElement.height = videoTrack.getSettings().height;
+        // create new detector
+        var barcodeDetector = new BarcodeDetector({
+          formats: ["qr_code"]
+        });
+
+        // check compatibility
+        if (barcodeDetector) {
+          console.log("Barcode Detector supported!");
+        } else {
+          console.log("Barcode Detector is not supported by this browser.");
+        }
         const updateCanvas = () => {
           ctx.drawImage(
             videoElement,
-            -canvasElement.width,
+            0,
             0,
             canvasElement.width,
             canvasElement.height
           );
-          ctx.scale(-1, 1);
-          setTimeout(
-            () => updateCanvas(),
-            1000 / videoTrack.getSettings().frameRate
-          );
+          // ctx.scale(-1, 1);
+          barcodeDetector
+            .detect(canvasElement)
+            .then(barcodes => {
+              barcodes.forEach(barcode => {
+                console.log(barcode.rawValue);
+                alert(barcode.rawValue);
+              });
+              setTimeout(
+                () => updateCanvas(),
+                1000 / videoTrack.getSettings().frameRate
+              );
+            })
+            .catch(err => {
+              console.log(err);
+            });
         };
 
         window.requestAnimationFrame(updateCanvas);
@@ -49,18 +71,6 @@ window.onload = () => {
       .catch(e => {
         errorElement.innerText = e;
       });
-
-    // create new detector
-    var barcodeDetector = new BarcodeDetector({
-      formats: ["qr_code"]
-    });
-
-    // check compatibility
-    if (barcodeDetector) {
-      console.log("Barcode Detector supported!");
-    } else {
-      console.log("Barcode Detector is not supported by this browser.");
-    }
   }
   init();
 };
