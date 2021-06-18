@@ -5,7 +5,7 @@
 window.onload = () => {
   const videoElement = document.getElementById("video");
   const errorElement = document.getElementById("error");
-  const userHaveCamera = new Promise((resolve, reject) => {    
+  const userHaveCamera = new Promise((resolve, reject) => {
     navigator.mediaDevices
       .getUserMedia({ video: true })
       .then(e => {
@@ -16,12 +16,13 @@ window.onload = () => {
           resolve(true);
         }
       })
-      .catch((e) => {
+      .catch(e => {
         reject(e);
       });
-  })
+  });
 
   async function init() {
+    console.info(await userHaveCamera);
     if (await !userHaveCamera) {
       errorElement.innerText = "カメラにアクセスできませんでした";
     } else {
@@ -38,5 +39,5 @@ window.onload = () => {
       }
     }
   }
-  init()
+  init();
 };
