@@ -6,7 +6,7 @@
 window.onload = () => {
   const videoElement = document.getElementById("video");
   const canvasElement = document.getElementById("canvas");
-  
+
   const errorElement = document.getElementById("error");
   const userCamera = new Promise((resolve, reject) => {
     navigator.mediaDevices
@@ -27,7 +27,7 @@ window.onload = () => {
     userCamera
       .then(e => {
         videoElement.srcObject = e;
-        const videoTracks = e.getVideoTracks()
+        const videoTracks = e.getVideoTracks();
         const videoTrack = videoTracks[0];
         canvasElement.width = videoTrack.getSettings().width;
         canvasElement.height = videoTrack.getSettings().height;
@@ -40,53 +40,45 @@ window.onload = () => {
         } else {
           console.log("Barcode Detector is not supported by this browser.");
         }
-      
-      const drawBoxToOverLay = points => {
-        const ctx = document.getElementById('canvas_overlay').getContext("2d");
-        ctx.lineWidth = 5;
-                ctx.lineJoin = "round";
-                ctx.strokeStyle = "#ff756b";
-                ctx.fillStyle = "#ff756b91";
-                ctx.beginPath();
-                ctx.moveTo(
-                  points[0].x,
-                  points[0].y
-                );
 
-                ctx.lineTo(
-                  points[1].x,
-                  points[1].y
-                );
-                ctx.lineTo(
-                  points[2].x,
-                  points[2].y
-                );
-                ctx.lineTo(
-                  points[3].x,
-                  points[3].y
-                );
-                ctx.closePath();
-                ctx.stroke();
-                ctx.fill();
-      }
+        const drawBoxToOverLay = points => {
+          const ctx = document
+            .getElementById("canvas_overlay")
+            .getContext("2d");
+          ctx.lineWidth = 5;
+          ctx.lineJoin = "round";
+          ctx.strokeStyle = "#ff756b";
+          ctx.fillStyle = "#ff756b91";
+          ctx.beginPath();
+          ctx.moveTo(points[0].x, points[0].y);
+
+          ctx.lineTo(points[1].x, points[1].y);
+          ctx.lineTo(points[2].x, points[2].y);
+          ctx.lineTo(points[3].x, points[3].y);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fill();
+        };
 
         const detectCode = canvas => {
           barcodeDetector
             .detect(canvas)
             .then(barcodes => {
-            document.getElementById('canvas_overlay').width = canvas.width
-            document.getElementById('canvas_overlay').height = canvas.height
-            const ctx = document.getElementById('canvas_overlay').getContext("2d");
+              document.getElementById("canvas_overlay").width = canvas.width;
+              document.getElementById("canvas_overlay").height = canvas.height;
+              const ctx = document
+                .getElementById("canvas_overlay")
+                .getContext("2d");
               barcodes.forEach(barcode => {
-                drawBoxToOverLay(barcode.cornerPoints)
+                drawBoxToOverLay(barcode.cornerPoints);
                 errorElement.innerText = barcode.rawValue;
               });
               setTimeout(
                 () => detectCode(canvas),
-                (1000 / videoTrack.getSettings().frameRate) * 0.9
+                1000 / videoTrack.getSettings().frameRate
               );
             })
-            .catch(err => {            
+            .catch(err => {
               console.log(err);
             });
         };
@@ -105,15 +97,16 @@ window.onload = () => {
           );
         };
 
-        updateCanvas();      
+        updateCanvas();
         detectCode(canvasElement);
       })
       .catch(e => {
-      console.info(e)
-      if(e.toString().indexOf('NotAllowedError')) {
-        errorElement.innerText = 'アクセスが拒否されました';
-      }else {errorElement.innerText = e;}
-        
+        console.info(e);
+        if (e.toString().indexOf("NotAllowedError")) {
+          errorElement.innerText = "アクセスが拒否されました";
+        } else {
+          errorElement.innerText = e;
+        }
       });
   }
   init();
