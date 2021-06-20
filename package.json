@@ -1,0 +1,21 @@
+{
+  "name": "lumpy-wild-barge",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://fc349d4f-6594-4197-b829-9cdb386d1e9c@api.glitch.com/git/lumpy-wild-barge",
+  "author": "appare45 <64473501+appare45@users.noreply.github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "jsqr": "^1.4.0",
+    "webpack": "^5.39.1"
+  },
+  "scripts": {
+    "build": "webpack --mode=production",
+    "dev": "webpack --mode=development --watch & webpack serve --mode=development",
+    "start": "webpack serve"
+  }
+}
