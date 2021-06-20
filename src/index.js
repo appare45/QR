@@ -68,8 +68,8 @@ window.onload = () => {
         canvasElement.width = videoTrack.getSettings().width;
         canvasElement.height = videoTrack.getSettings().height;
         updateCanvas(videoTrack.getSettings().frameRate);
-        document.getElementById("canvas_overlay").width = canvas.width;
-        document.getElementById("canvas_overlay").height = canvas.height;
+        document.getElementById("canvas_overlay").width = canvasElement.width;
+        document.getElementById("canvas_overlay").height = canvasElement.height;
         if (!('BarcodeDetector' in window)) {
           const ctx = document
             .getElementById("canvas")
