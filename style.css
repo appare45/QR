@@ -1,0 +1,30 @@
+/* CSS files add styling rules to your content */
+
+body {
+  font-family: helvetica, arial, sans-serif;
+  margin: 2em;
+}
+
+h1 {
+  font-style: italic;
+  color: #373fff;
+}
+
+.video {
+  margin: 0;
+}
+
+main {
+  position: relative;
+  height: max-content;
+}
+
+main > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.back {
+  display: none;
+}
