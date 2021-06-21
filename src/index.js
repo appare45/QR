@@ -31,18 +31,20 @@ window.onload = () => {
     const ctx = canvas
       .getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.lineWidth = 5;
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "#ff756b";
-    ctx.fillStyle = "#ff756b91";
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    ctx.lineTo(points[1].x, points[1].y);
-    ctx.lineTo(points[2].x, points[2].y);
-    ctx.lineTo(points[3].x, points[3].y);
-    ctx.closePath();
-    ctx.stroke();
-    ctx.fill();
+    if (points) {
+      ctx.lineWidth = 5;
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "#ff756b";
+      ctx.fillStyle = "#ff756b91";
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      ctx.lineTo(points[1].x, points[1].y);
+      ctx.lineTo(points[2].x, points[2].y);
+      ctx.lineTo(points[3].x, points[3].y);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.fill();
+    }
   };
 
   const updateCanvas = (fps) => {
@@ -77,13 +79,15 @@ window.onload = () => {
           const detectCode = () => {
             const image = ctx.getImageData(0, 0, canvasElement.width, canvasElement.height)
             const code = jsQR(image.data, image.width, image.height)
-            console.info(code)
             if (code) {
               drawBoxToOverLay([code.location.topLeftCorner, code.location.topRightCorner, code.location.bottomRightCorner, code.location.bottomLeftCorner])
               errorElement.innerText = code.data;
             } else {
-              document
-                .getElementById("canvas_overlay").getContext('2d').clearRect(0, 0, canvasElement.width, canvasElement.height)
+              const canvas = document
+                .getElementById("canvas_overlay")
+              const ctx = canvas
+                .getContext("2d");
+              ctx.clearRect(0, 0, canvas.width, canvas.height)
             }
             setTimeout(
               () => detectCode(canvas),
@@ -98,10 +102,18 @@ window.onload = () => {
             barcodeDetector
               .detect(canvas)
               .then(barcodes => {
-                barcodes.forEach(barcode => {
-                  drawBoxToOverLay(barcode.cornerPoints);
-                  errorElement.innerText = barcode.rawValue;
-                });
+                if (barcodes.length) {
+                  barcodes.forEach(barcode => {
+                    drawBoxToOverLay(barcode.cornerPoints);
+                    errorElement.innerText = barcode.rawValue;
+                  });
+                } else {
+                  const canvas = document
+                    .getElementById("canvas_overlay")
+                  const ctx = canvas
+                    .getContext("2d");
+                  ctx.clearRect(0, 0, canvas.width, canvas.height)
+                }
                 setTimeout(
                   () => detectCode(canvas),
                   1000 / videoTrack.getSettings().frameRate

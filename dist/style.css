@@ -12,6 +12,7 @@ h1 {
 
 .video {
   margin: 0;
+  max-width: 100vw;
 }
 
 main {
@@ -26,5 +27,5 @@ main > * {
 }
 
 .back {
-  display: none;
+  opacity: 0;
 }
