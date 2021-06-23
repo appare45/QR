@@ -12,11 +12,12 @@ h1 {
 
 .video {
   margin: 0;
-  max-width: 100vw;
+  max-width: 100%;
 }
 
 main {
   position: relative;
+  max-width: 100vw;
   height: max-content;
 }
 
@@ -28,4 +29,5 @@ main > * {
 
 .back {
   opacity: 0;
+  max-width: 100%;
 }
